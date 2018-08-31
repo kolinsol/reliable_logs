@@ -18,7 +18,7 @@ start(_StartType, _StartArgs) ->
     Dispatch = cowboy_router:compile([
         {'_',
          [
-          {"/ping", ping_handler, [{op, ping}]}
+          {"/ping", ping_handler, []}
          ]}
     ]),
     {ok, _} = cowboy:start_http(http_listener, 100,
