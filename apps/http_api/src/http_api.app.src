@@ -1,0 +1,17 @@
+{application, http_api,
+ [{description, "An HTTP API"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { http_api_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    cowboy
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.
