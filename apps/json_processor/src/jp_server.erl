@@ -20,7 +20,7 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, {}).
+-record(state, {schema}).
 
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
@@ -30,11 +30,19 @@ start_link() ->
 %%%===================================================================
 
 init([]) ->
-    {ok, #state{}}.
+    {ok, File} = file:read_file("/Users/kolinsol/Documents/dev/erlang/wg-test/reliable_logs/apps/json_processor/schemas/test_schema.json"),
+    Decoded = jiffy:decode(File),
+    {ok, #state{schema = Decoded}}.
 
-handle_call({decode, RawJSON}, _From, State) ->
-    Decoded = jiffy:decode(RawJSON),
-    {reply, Decoded, State}.
+handle_call({decode, JSON}, _From, State) ->
+    Decoded = jiffy:decode(JSON),
+    {reply, Decoded, State};
+handle_call({validate, JSON, _SchemaName}, _From, State) ->
+    Result = jesse:validate_with_schema(State#state.schema, JSON),
+    {reply, Result, State};
+handle_call({encode, JSON}, _From, State) ->
+    Encoded = jiffy:encode(JSON),
+    {reply, Encoded, State}.
 
 handle_cast(_Msg, State) ->
     {noreply, State}.

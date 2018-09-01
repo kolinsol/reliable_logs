@@ -1,4 +1,4 @@
--module(logs_handler).
+-module(save_handler).
 
 -export([init/3, handle/2, terminate/3]).
 
@@ -23,12 +23,14 @@ is_json_body(Req) ->
         {<<"application/json">>, _Req2} ->
             {ok, Body, _Req3} = cowboy_req:body(Req),
             DecodedBody = json_processor:decode(Body),
-            {Method, _Req4} = cowboy_req:method(Req),
-            validate_body(DecodedBody, Method);
+            validate_body(DecodedBody);
         _ -> {error, wrong_content_type}
     end.
 
-validate_body(Body, <<"POST">>) ->
-    io:format("POST ~p~n", [Body]);
-validate_body(_Body, _Method) ->
-    {error, wrong_method}.
+validate_body(Body) ->
+    case json_processor:validate(Body, save_schema) of
+        {ok, _} -> io:format("success ~p~n", [Body]);
+        {error, _Error} -> 
+            io:format("failure ~p~n", [Body]),
+            {error, wrong_json}
+    end.

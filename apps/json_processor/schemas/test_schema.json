@@ -1,0 +1,14 @@
+{
+    "name": "Test",
+    "properties": {
+        "id": {
+            "type": "number",
+            "minimum": 0,
+            "required": true
+        },
+        "name": {
+            "required": false,
+            "type": "string"
+        }
+    }
+}
