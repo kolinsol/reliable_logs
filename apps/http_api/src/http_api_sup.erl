@@ -1,6 +1,5 @@
 %%%-------------------------------------------------------------------
 %% @doc http_api top level supervisor.
-%% @end
 %%%-------------------------------------------------------------------
 
 -module(http_api_sup).
@@ -26,10 +25,6 @@ start_link() ->
 %% Supervisor callbacks
 %%====================================================================
 
-%% Child :: #{id => Id, start => {M, F, A}}
-%% Optional keys are restart, shutdown, type, modules.
-%% Before OTP 18 tuples must be used to specify a child. e.g.
-%% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
     {ok, { {one_for_all, 0, 1}, []} }.
 

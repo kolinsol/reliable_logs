@@ -1,6 +1,5 @@
 %%%-------------------------------------------------------------------
 %% @doc json_processor top level supervisor.
-%% @end
 %%%-------------------------------------------------------------------
 
 -module(json_processor_sup).
@@ -26,10 +25,6 @@ start_link() ->
 %% Supervisor callbacks
 %%====================================================================
 
-%% Child :: #{id => Id, start => {M, F, A}}
-%% Optional keys are restart, shutdown, type, modules.
-%% Before OTP 18 tuples must be used to specify a child. e.g.
-%% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
      JSONProcessingServer = {jp_server, {jp_server, start_link, []},
                              permanent, 2000, worker, [jp_server]},
