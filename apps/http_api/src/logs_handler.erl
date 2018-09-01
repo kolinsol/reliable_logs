@@ -22,8 +22,9 @@ is_json_body(Req) ->
     case cowboy_req:header(<<"content-type">>, Req) of
         {<<"application/json">>, _Req2} ->
             {ok, Body, _Req3} = cowboy_req:body(Req),
+            DecodedBody = json_processor:decode(Body),
             {Method, _Req4} = cowboy_req:method(Req),
-            validate_body(Body, Method);
+            validate_body(DecodedBody, Method);
         _ -> {error, wrong_content_type}
     end.
 
