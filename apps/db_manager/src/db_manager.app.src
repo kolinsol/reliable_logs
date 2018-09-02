@@ -1,14 +1,11 @@
-{application, http_api,
- [{description, "An HTTP API"},
+{application, db_manager,
+ [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { http_api_app, []}},
+  {mod, { db_manager_app, []}},
   {applications,
    [kernel,
-    stdlib,
-    cowboy,
-    json_processor,
-    db_manager
+    stdlib
    ]},
   {env,[]},
   {modules, []},
