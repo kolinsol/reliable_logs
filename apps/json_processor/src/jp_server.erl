@@ -30,7 +30,7 @@ start_link() ->
 %%%===================================================================
 
 init([]) ->
-    {ok, File} = file:read_file("/Users/kolinsol/Documents/dev/erlang/wg-test/reliable_logs/apps/json_processor/schemas/test_schema.json"),
+    {ok, File} = file:read_file("/Users/kolinsol/Documents/dev/erlang/wg-test/reliable_logs/apps/json_processor/schemas/save_schema.json"),
     Decoded = jiffy:decode(File),
     {ok, #state{schema = Decoded}}.
 

@@ -1,0 +1,29 @@
+{
+    "name": "save_schema",
+    "properties": {
+        "log_created": {
+            "type": "string",
+            "required": true
+        },
+        "app_id": {
+            "type": "string",
+            "required": false
+        },
+        "object_id": {
+            "type": "number",
+            "required": true
+        },
+        "tags": {
+            "type": "object",
+            "requires": true
+        },
+        "message": {
+            "type": "string",
+            "required": true
+        },
+        "context": {
+            "type": "object",
+            "required": false
+        }
+    }
+}
