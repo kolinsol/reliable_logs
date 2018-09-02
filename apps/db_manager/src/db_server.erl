@@ -32,6 +32,16 @@ start_link() ->
 %%%===================================================================
 
 init([]) ->
+    pgapp:connect(save_pool, [{size, 10},
+                              {database, "reliable_logs"},
+                              {username, "kolinsol"}
+                              ]),
+    pgapp:connect(select_pool, [{size, 10},
+                              {database, "reliable_logs"},
+                              {username, "kolinsol"}
+                              ]),
+    Res = pgapp:squery(save_pool, "select * from logs"),
+    io:format("~p~n", [Res]),
     {ok, #state{}}.
 
 handle_call(_Request, _From, State) ->
