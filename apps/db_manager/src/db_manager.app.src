@@ -5,8 +5,7 @@
   {mod, { db_manager_app, []}},
   {applications,
    [kernel,
-    stdlib,
-    epgsql_pool
+    stdlib
    ]},
   {env,[]},
   {modules, []},
