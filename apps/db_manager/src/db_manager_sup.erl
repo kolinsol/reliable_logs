@@ -26,7 +26,11 @@ start_link() ->
 %%====================================================================
 
 init([]) ->
-    {ok, { {one_for_all, 0, 1}, []} }.
+    DBServer = {db_server, {db_server, start_link, []},
+                permanent, 2000, worker, [db_server]},
+    Children = [DBServer],
+    RestartStrategy = {one_for_one, 4, 3600},
+    {ok, {RestartStrategy, Children}}.
 
 %%====================================================================
 %% Internal functions
