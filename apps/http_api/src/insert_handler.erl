@@ -6,11 +6,17 @@ init(_Type, Req, []) ->
 	{ok, Req, no_state}.
 
 handle(Req, State) ->
-    has_body(Req),
-    {ok, Req, State}.
+    process_request(Req),
+    {ok, Req2} = cowboy_req:reply(200, [
+        {<<"content-type">>, <<"application/json">>}
+	], <<"{\"success\": true}">>, Req),
+    {ok, Req2, State}.
 
 terminate(_Reason, _Req, _State) ->
     ok.
+
+process_request(Req) ->
+    has_body(Req).
 
 has_body(Req) ->
     case cowboy_req:has_body(Req) of
@@ -30,9 +36,7 @@ is_json_body(Req) ->
 validate_body(Body) ->
     case json_processor:validate(Body, insert_schema) of
         {ok, _} ->
-            io:format("success ~p~n", [Body]),
             db_manager:insert(Body);
         {error, _Error} -> 
-            io:format("failure ~p~n", [Body]),
             {error, wrong_json}
     end.

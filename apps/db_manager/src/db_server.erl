@@ -32,19 +32,15 @@ start_link() ->
 %%%===================================================================
 
 init([]) ->
-    Res = pgapp:squery(select_pool, "select * from logs"),
-    io:format("~p~n", [Res]),
     {ok, #state{}}.
 
 handle_call({select, Query}, _From, State) ->
     Res = pgapp:squery(select_pool, Query),
-    io:format("select ~p~n", [Res]),
     {ok, _Columns, Rows} = Res,
-    {reply, Rows, State}.
+    Res2 = lists:map(fun tuple_to_list/1, Rows),
+    {reply, Res2, State}.
 
 handle_cast({insert, {KeyValue}}, State) ->
-    io:format("json ~p~n", [KeyValue]),
-
     [{<<"log_created">>, LogCreated},
      {<<"app_id">>, AppId},
      {<<"object_id">>, ObjectId},
@@ -56,7 +52,7 @@ handle_cast({insert, {KeyValue}}, State) ->
     EncodedContext = json_processor:encode(Context),
     EncodedTags = json_processor:encode(Tags),
 
-    Res = pgapp:equery(
+    pgapp:equery(
         insert_pool,
         "insert into logs (log_created, app_id," ++
         "object_id, tags, message, context) VALUES" ++
@@ -64,7 +60,6 @@ handle_cast({insert, {KeyValue}}, State) ->
         [ParsedLogCreated, AppId, ObjectId,
          EncodedTags, Message, EncodedContext]
     ),
-    io:format("insert ~p~n", [Res]),
 
     {noreply, State}.
 
