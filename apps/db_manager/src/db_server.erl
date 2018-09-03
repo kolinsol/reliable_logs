@@ -52,17 +52,17 @@ handle_cast({insert, {KeyValue}}, State) ->
      {<<"message">>, Message},
      {<<"context">>, Context}] = KeyValue,
 
+    ParsedLogCreated = iso8601:parse_exact(LogCreated),
     EncodedContext = json_processor:encode(Context),
     EncodedTags = json_processor:encode(Tags),
 
     Res = pgapp:equery(
         insert_pool,
-        "insert into logs (log_created, created, app_id," ++
+        "insert into logs (log_created, app_id," ++
         "object_id, tags, message, context) VALUES" ++
-        "($1, $2, $3, $4, $5, $6, $7);",
-        [{{2000, 10, 10}, {12, 2, 2}},
-         {{2000, 10, 10}, {12, 2, 2}},
-         AppId, ObjectId, EncodedTags, Message, EncodedContext]
+        "($1, $2, $3, $4, $5, $6);",
+        [ParsedLogCreated, AppId, ObjectId,
+         EncodedTags, Message, EncodedContext]
     ),
     io:format("insert ~p~n", [Res]),
 
