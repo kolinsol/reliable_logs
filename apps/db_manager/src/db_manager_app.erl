@@ -16,11 +16,11 @@
 start(_StartType, _StartArgs) ->
     pgapp:connect(insert_pool, [{size, 10},
                               {database, "reliable_logs"},
-                              {username, "kolinsol"}
+                              {username, "regular"}
                               ]),
     pgapp:connect(select_pool, [{size, 10},
                               {database, "reliable_logs"},
-                              {username, "kolinsol"}
+                              {username, "readonly"}
                               ]),
     db_manager_sup:start_link().
 
