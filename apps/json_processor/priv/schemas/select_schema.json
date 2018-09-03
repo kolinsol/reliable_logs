@@ -1,0 +1,9 @@
+{
+    "name": "select_schema",
+    "properties": {
+        "query": {
+            "type": "string",
+            "required": true
+        }
+    }
+}

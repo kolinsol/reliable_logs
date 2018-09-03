@@ -30,15 +30,19 @@ start_link() ->
 %%%===================================================================
 
 init([]) ->
-    {ok, File} = file:read_file("/Users/kolinsol/Documents/dev/erlang/wg-test/reliable_logs/apps/json_processor/schemas/insert_schema.json"),
-    Decoded = jiffy:decode(File),
-    {ok, #state{schema = Decoded}}.
+    {ok, InsertSchema} = file:read_file("/Users/kolinsol/Documents/dev/erlang/wg-test/reliable_logs/apps/json_processor/priv/schemas/insert_schema.json"),
+    DecodedInsertSchema = jiffy:decode(InsertSchema),
+    jesse:add_schema(insert_schema, DecodedInsertSchema),
+    {ok, SelectSchema} = file:read_file("/Users/kolinsol/Documents/dev/erlang/wg-test/reliable_logs/apps/json_processor/priv/schemas/select_schema.json"),
+    DecodedSelectSchema = jiffy:decode(SelectSchema),
+    jesse:add_schema(select_schema, DecodedSelectSchema),
+    {ok, #state{}}.
 
 handle_call({decode, JSON}, _From, State) ->
     Decoded = jiffy:decode(JSON),
     {reply, Decoded, State};
-handle_call({validate, JSON, _SchemaName}, _From, State) ->
-    Result = jesse:validate_with_schema(State#state.schema, JSON),
+handle_call({validate, JSON, SchemaName}, _From, State) ->
+    Result = jesse:validate(SchemaName, JSON),
     {reply, Result, State};
 handle_call({encode, JSON}, _From, State) ->
     Encoded = jiffy:encode(JSON),

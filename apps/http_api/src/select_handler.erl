@@ -28,12 +28,12 @@ is_json_body(Req) ->
     end.
 
 validate_body(Body) ->
-    % case json_processor:validate(Body, select_schema) of
-    %     {ok, _} ->
-    %         io:format("success ~p~n", [Body]),
+    case json_processor:validate(Body, select_schema) of
+        {ok, _} ->
+            io:format("success ~p~n", [Body]),
             {[{<<"query">>, Query}]} = Body,
-            db_manager:select(Query).
-        % {error, _Error} -> 
-        %     io:format("failure ~p~n", [Body]),
-        %     {error, wrong_json}
-    % end.
+            db_manager:select(Query);
+        {error, _Error} -> 
+            io:format("failure ~p~n", [Body]),
+            {error, wrong_json}
+    end.

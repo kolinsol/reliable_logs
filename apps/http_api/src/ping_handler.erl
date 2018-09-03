@@ -7,8 +7,8 @@ init(_Type, Req, []) ->
 
 handle(Req, State) ->
     {ok, Req2} = cowboy_req:reply(200, [
-        {<<"content-type">>, <<"text/plain">>}
-	], <<"pong">>, Req),
+        {<<"content-type">>, <<"application/json">>}
+	], <<"{\"success\": true}">>, Req),
     {ok, Req2, State}.
 
 terminate(_Reason, _Req, _State) ->
