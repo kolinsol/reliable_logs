@@ -32,7 +32,7 @@ start_link() ->
 %%%===================================================================
 
 init([]) ->
-    Res = pgapp:squery(save_pool, "select * from logs"),
+    Res = pgapp:squery(select_pool, "select * from logs"),
     io:format("~p~n", [Res]),
     {ok, #state{}}.
 
@@ -44,7 +44,7 @@ handle_call({select, Query}, _From, State) ->
 
 handle_cast({insert, JSON}, State) ->
     Res = pgapp:equery(
-        save_pool,
+        insert_pool,
         "insert into logs (log_created, created, app_id," ++
         "object_id, tags, message, context) VALUES" ++
         "($1, $2, $3, $4, $5, $6, $7);",

@@ -1,5 +1,5 @@
 {
-    "name": "save_schema",
+    "name": "insert_schema",
     "properties": {
         "log_created": {
             "type": "string",

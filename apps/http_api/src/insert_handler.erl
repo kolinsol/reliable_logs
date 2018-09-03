@@ -1,4 +1,4 @@
--module(save_handler).
+-module(insert_handler).
 
 -export([init/3, handle/2, terminate/3]).
 
@@ -28,7 +28,7 @@ is_json_body(Req) ->
     end.
 
 validate_body(Body) ->
-    case json_processor:validate(Body, save_schema) of
+    case json_processor:validate(Body, insert_schema) of
         {ok, _} -> io:format("success ~p~n", [Body]);
         {error, _Error} -> 
             io:format("failure ~p~n", [Body]),

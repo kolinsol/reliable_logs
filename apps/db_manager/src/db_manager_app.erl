@@ -14,7 +14,7 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
-    pgapp:connect(save_pool, [{size, 10},
+    pgapp:connect(insert_pool, [{size, 10},
                               {database, "reliable_logs"},
                               {username, "kolinsol"}
                               ]),

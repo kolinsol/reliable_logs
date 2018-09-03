@@ -18,7 +18,7 @@ start(_StartType, _StartArgs) ->
         {'_',
          [
           {"/ping", ping_handler, []},
-          {"/save", save_handler, []}
+          {"/insert", insert_handler, []}
          ]}
     ]),
     {ok, _} = cowboy:start_http(http_listener, 100,
