@@ -29,7 +29,9 @@ is_json_body(Req) ->
 
 validate_body(Body) ->
     case json_processor:validate(Body, insert_schema) of
-        {ok, _} -> io:format("success ~p~n", [Body]);
+        {ok, _} ->
+            io:format("success ~p~n", [Body]),
+            db_manager:insert(Body);
         {error, _Error} -> 
             io:format("failure ~p~n", [Body]),
             {error, wrong_json}

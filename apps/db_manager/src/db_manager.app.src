@@ -6,7 +6,8 @@
   {applications,
    [kernel,
     stdlib,
-    pgapp
+    pgapp,
+    json_processor
    ]},
   {env,[]},
   {modules, []},
