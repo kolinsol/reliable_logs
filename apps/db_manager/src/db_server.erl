@@ -36,8 +36,8 @@ init([]) ->
 
 handle_call({select, Query}, _From, State) ->
     Res = pgapp:squery(select_pool, Query),
-    {ok, _Columns, Rows} = Res,
-    Res2 = lists:map(fun tuple_to_list/1, Rows),
+    {ok, Columns, Rows} = Res,
+    Res2 = transfrom_select_result(Columns, Rows),
     {reply, Res2, State}.
 
 handle_cast({insert, {KeyValue}}, State) ->
@@ -76,3 +76,14 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 
+transfrom_select_result(Columns, Rows) ->
+    ColumnNames = lists:map(
+        fun({column, ColumnName, _, _, _, _}) -> ColumnName end,
+        Columns
+    ),
+    Rows2 = lists:map(fun tuple_to_list/1, Rows),
+    Rows3 = lists:map(
+        fun(Row) -> {lists:zip(ColumnNames, Row)} end,
+        Rows2
+    ),
+    Rows3.
