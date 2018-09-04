@@ -35,10 +35,14 @@ init([]) ->
     {ok, #state{}}.
 
 handle_call({select, Query}, _From, State) ->
-    Res = pgapp:squery(select_pool, Query),
-    {ok, Columns, Rows} = Res,
-    Res2 = transfrom_select_result(Columns, Rows),
-    {reply, Res2, State}.
+    case pgapp:squery(select_pool, Query) of
+        {ok, Columns, Rows} ->
+            Res = transfrom_select_result(Columns, Rows),
+            {reply, {ok, Res}, State};
+        {error, _} ->
+            Res = {error, <<"database error">>, 500},
+            {reply, Res, State}
+    end.
 
 handle_cast({insert, {KeyValue}}, State) ->
     [{<<"log_created">>, LogCreated},
