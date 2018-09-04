@@ -6,6 +6,9 @@ init(_Type, Req, []) ->
 	{ok, Req, no_state}.
 
 handle(Req, State) ->
+    {Method, _TempReq} = cowboy_req:method(Req),
+    http_api_event:request_received(?MODULE, Method),
+
     {ok, Req2} = cowboy_req:reply(200, [
         {<<"content-type">>, <<"application/json">>}
 	], <<"{\"success\": true}">>, Req),

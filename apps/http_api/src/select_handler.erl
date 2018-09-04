@@ -6,6 +6,9 @@ init(_Type, Req, []) ->
 	{ok, Req, no_state}.
 
 handle(Req, State) ->
+    {Method, _TempReq} = cowboy_req:method(Req),
+    http_api_event:request_received(?MODULE, Method),
+
     case process_request(Req) of
         {ok, Res} ->
             ResultJSON = json_processor:encode({[{<<"success">>, true},

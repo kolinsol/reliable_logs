@@ -25,7 +25,12 @@ start(_StartType, _StartArgs) ->
     {ok, _} = cowboy:start_http(http_listener, 100,
                                 [{port, 8080}],
                                 [{env, [{dispatch, Dispatch}]}]),
-    http_api_sup:start_link().
+    case http_api_sup:start_link() of
+        {ok, Pid} ->
+            http_api_event_logger:add_handler(),
+            {ok, Pid};
+        Other -> {error, Other}
+    end.
 
 %%--------------------------------------------------------------------
 stop(_State) ->
