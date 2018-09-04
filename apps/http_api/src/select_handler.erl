@@ -9,7 +9,7 @@ handle(Req, State) ->
     {Method, _TempReq} = cowboy_req:method(Req),
     http_api_event:request_received(?MODULE, Method),
 
-    case process_request(Req) of
+    case common_handler:process_request(Req, fun validate_body/1) of
         {ok, Res} ->
             ResultJSON = json_processor:encode({[{<<"success">>, true},
                                                  {<<"result">>, Res}]}), 
@@ -29,24 +29,6 @@ handle(Req, State) ->
 
 terminate(_Reason, _Req, _State) ->
     ok.
-
-process_request(Req) ->
-    has_body(Req).
-
-has_body(Req) ->
-    case cowboy_req:has_body(Req) of
-        true -> is_json_body(Req);
-        false -> {error, <<"no body">>, 400}
-    end.
-
-is_json_body(Req) ->
-    case cowboy_req:header(<<"content-type">>, Req) of
-        {<<"application/json">>, _Req2} ->
-            {ok, Body, _Req3} = cowboy_req:body(Req),
-            DecodedBody = json_processor:decode(Body),
-            validate_body(DecodedBody);
-        _ -> {error, <<"wrong content type">>, 400}
-    end.
 
 validate_body(Body) ->
     case json_processor:validate(Body, select_schema) of

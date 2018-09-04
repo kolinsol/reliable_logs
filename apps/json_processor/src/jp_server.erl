@@ -33,8 +33,12 @@ init([]) ->
     {ok, #state{}}.
 
 handle_call({decode, JSON}, _From, State) ->
-    Decoded = jiffy:decode(JSON),
-    {reply, Decoded, State};
+    Result = try jiffy:decode(JSON) of
+                 Decoded -> Decoded
+             catch
+                 throw:Error -> {error, Error}
+             end,
+    {reply, Result, State};
 handle_call({validate, JSON, SchemaName}, _From, State) ->
     Result = jesse:validate(SchemaName, JSON),
     {reply, Result, State};
