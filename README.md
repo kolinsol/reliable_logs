@@ -22,8 +22,16 @@ git clone git@github.com:kolinsol/reliable_logs.git
 ```
 cd reliable_logs
 ```
+#### compile the project
+```
+rebar3 compile
+```
+#### run tests
+```
+rebar3 ct
+```
 #### Start the database server
-If you are using macOS (like me) and you have postgres installed via homebrew
+If you are using macOS (like me) and you have postgres installed via [homebrew](https://brew.sh/)
 then you can just do
 ```
 brew services start pstgres
@@ -66,6 +74,7 @@ The body should have the following structure:
 }
 ```
 here is the description of each field:
+
 |field name|required|type|description|
 |-|-|-|-|
 |log_created|true|timestamp|event occurence time|
@@ -74,6 +83,7 @@ here is the description of each field:
 |tags|true|json|arbitrary log classification info|
 |message|true|string|human readable event description|
 |context|false|json|any extra info|
+
 > please note that *timestamp* fields must be formatted according to [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) standard 
 #### select
 each request to */select* should be formed like this:
