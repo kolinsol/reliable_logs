@@ -1,0 +1,8 @@
+{
+	"log_created": "20120203T040506",
+	"app_id": "aaa",
+	"object_id": 12345678934567,
+	"tags": {"a": 2},
+	"message": "dwddw",
+	"context": {"s": 10}
+}
