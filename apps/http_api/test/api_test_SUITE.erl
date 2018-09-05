@@ -4,11 +4,12 @@
 -export([init_per_suite/1, end_per_suite/1,
         init_per_testcase/2, end_per_testcase/2]).
 -export([ping_test/1,
-         insert_test/1]).
+         insert_test/1,
+         select_test/1]).
 
 -include_lib("common_test/include/ct.hrl").
 
-all() -> [ping_test, insert_test].
+all() -> [ping_test, insert_test, select_test].
 
 init_per_suite(Config) ->
     application:start(xmerl),
@@ -72,13 +73,54 @@ init_per_testcase(insert_test, Config) ->
                      {method, <<"POST">>},
                      {body, InsertBody},
                      {content_type, <<"application/json">>}},
-    [{insert_post_req, InsertPostReq} | Config].
+    [{insert_post_req, InsertPostReq} | Config];
+init_per_testcase(select_test, Config) ->
+    meck:new(http_api_event),
+    meck:expect(http_api_event, request_received,
+                fun(_A, _B) -> true end),
+
+    meck:new(cowboy_req),
+    meck:expect(cowboy_req, reply,
+                fun(Code, _Headers, Body, Req) ->
+                        {ok, {Code, Body, Req}} end),
+    meck:expect(cowboy_req, method,
+                fun({http_req, {method, Method}, _Body, _CT} = Req) ->
+                        {Method, Req} end),
+    meck:expect(cowboy_req, has_body,
+                fun({http_req, _Method, {body, _Body}, _CT}) -> true end),
+    meck:expect(cowboy_req, header,
+                fun(<<"content-type">>,
+                    {http_req, _Method, _Body, {content_type, CT}} = Req) ->
+                        {CT, Req} end),
+    meck:expect(cowboy_req, body,
+                fun({http_req, _Method, {body, Body}, _CT} = Req) ->
+                        {ok, Body, Req} end),
+
+    meck:new(db_manager),
+    meck:expect(db_manager, select, fun(_A) -> {ok, []} end),
+
+    HttpApiPrivDir = code:priv_dir(http_api),
+    TestDataDir = filename:join(HttpApiPrivDir, "test_data"),
+
+    SelectBodyPath = filename:join([TestDataDir, "select_body.json"]),
+    {ok, SelectBody} = file:read_file(SelectBodyPath),
+
+    SelectPostReq = {http_req,
+                     {method, <<"POST">>},
+                     {body, SelectBody},
+                     {content_type, <<"application/json">>}},
+    [{select_post_req, SelectPostReq} | Config].
 
 end_per_testcase(ping_test, Config) ->
     meck:unload(http_api_event),
     meck:unload(cowboy_req),
     Config;
 end_per_testcase(insert_test, Config) ->
+    meck:unload(http_api_event),
+    meck:unload(cowboy_req),
+    meck:unload(db_manager),
+    Config;
+end_per_testcase(select_test, Config) ->
     meck:unload(http_api_event),
     meck:unload(cowboy_req),
     meck:unload(db_manager),
@@ -93,3 +135,10 @@ insert_test(Config) ->
     InsertPostReq = ?config(insert_post_req, Config),
     {ok, {200, <<"{\"success\": true}">>, InsertPostReq}, []} =
         insert_handler:handle(InsertPostReq, []).
+
+select_test(Config) ->
+    SelectPostReq = ?config(select_post_req, Config),
+    Expected = json_processor:encode({[{<<"success">>, true},
+                                       {<<"result">>, []}]}), 
+    {ok, {200, Expected, SelectPostReq}, []} =
+        select_handler:handle(SelectPostReq, []).
