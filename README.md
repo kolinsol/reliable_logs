@@ -34,7 +34,7 @@ rebar3 ct
 If you are using macOS (like me) and you have postgres installed via [homebrew](https://brew.sh/)
 then you can just do
 ```
-brew services start pstgres
+brew services start postgres
 ```
 Otherwise please consult [this page](https://www.postgresql.org/docs/9.1/static/server-start.html)
 #### create database structure
@@ -47,11 +47,12 @@ psql < init.sql
 rebar3 run
 ```
 The application will start on port **8080**
-To ensure the application works you can issue the following request^
+To ensure the application works you can issue the following command
+in the command line:
 ```
 curl http://localhost:8080/ping
 ```
-If application is working you'll get a response like this^
+If application is working you'll get a response like this:
 ```
 {"success": true}
 ```
@@ -61,7 +62,8 @@ The api has two publicly exposes endoints
 * /select
 Both of the endpints accept *POST* requests and work only with *JSON* data
 #### insert
-each request to */insert* endpoint should encode in its body a single log string
+Each request to */insert* endpoint should encode in its body a single log string
+
 The body should have the following structure:
 ```json
 {

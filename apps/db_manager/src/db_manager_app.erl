@@ -14,14 +14,14 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
-    pgapp:connect(insert_pool, [{size, 10},
-                              {database, "reliable_logs"},
-                              {username, "regular"}
-                              ]),
-    pgapp:connect(select_pool, [{size, 10},
-                              {database, "reliable_logs"},
-                              {username, "readonly"}
-                              ]),
+    {ok, _P1} = pgapp:connect(insert_pool, [{size, 10},
+                                            {database, "reliable_logs"},
+                                            {username, "regular"}
+                                            ]),
+    {ok, _P2} = pgapp:connect(select_pool, [{size, 10},
+                                            {database, "reliable_logs"},
+                                            {username, "readonly"}
+                                            ]),
     db_manager_sup:start_link().
 
 %%--------------------------------------------------------------------
