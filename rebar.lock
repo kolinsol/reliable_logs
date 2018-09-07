@@ -8,7 +8,9 @@
  {<<"jsx">>,{pkg,<<"jsx">>,<<"2.8.0">>},1},
  {<<"pgapp">>,{pkg,<<"pgapp">>,<<"0.0.2">>},0},
  {<<"poolboy">>,{pkg,<<"poolboy">>,<<"1.5.1">>},1},
- {<<"ranch">>,{pkg,<<"ranch">>,<<"1.3.2">>},1}]}.
+ {<<"quickrand">>,{pkg,<<"quickrand">>,<<"1.7.4-rc1">>},1},
+ {<<"ranch">>,{pkg,<<"ranch">>,<<"1.3.2">>},1},
+ {<<"uuid">>,{pkg,<<"uuid_erl">>,<<"1.7.3">>},0}]}.
 [
 {pkg_hash,[
  {<<"cowboy">>, <<"61AC29EA970389A88ECA5A65601460162D370A70018AFE6F949A29DCA91F3BB0">>},
@@ -20,5 +22,7 @@
  {<<"jsx">>, <<"749BEC6D205C694AE1786D62CEA6CC45A390437E24835FD16D12D74F07097727">>},
  {<<"pgapp">>, <<"3E104BB777C8455D8B26D1538B67ABE0188EE97B1DF973FD936C2204CB316196">>},
  {<<"poolboy">>, <<"6B46163901CFD0A1B43D692657ED9D7E599853B3B21B95AE5AE0A777CF9B6CA8">>},
- {<<"ranch">>, <<"E4965A144DC9FBE70E5C077C65E73C57165416A901BD02EA899CFD95AA890986">>}]}
+ {<<"quickrand">>, <<"61A9AF693C8B4FC9F838818493BCEE127AA2EE70483BE32BAD20C760C208E8BA">>},
+ {<<"ranch">>, <<"E4965A144DC9FBE70E5C077C65E73C57165416A901BD02EA899CFD95AA890986">>},
+ {<<"uuid">>, <<"C5DF97D1A3D626235C2415E74053C47B2138BB863C5CD802AB5CAECB8ECC019F">>}]}
 ].

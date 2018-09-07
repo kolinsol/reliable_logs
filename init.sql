@@ -3,7 +3,7 @@ create database reliable_logs;
 \connect reliable_logs
 
 create table logs(
-    request_id serial primary key,
+    request_id uuid not null,
     log_created timestamp not null,
     created timestamp not null default now(),
     app_id text not null,
@@ -27,5 +27,4 @@ create role regular with login;
 
 grant connect on database reliable_logs to regular;
 grant usage on schema public to regular;
-grant all on logs_request_id_seq to regular;
 grant all on logs to regular;

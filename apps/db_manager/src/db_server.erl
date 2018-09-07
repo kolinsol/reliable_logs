@@ -55,13 +55,14 @@ handle_cast({insert, {KeyValue}}, State) ->
     ParsedLogCreated = iso8601:parse_exact(LogCreated),
     EncodedContext = json_processor:encode(Context),
     EncodedTags = json_processor:encode(Tags),
+    UUID = list_to_binary(uuid:uuid_to_string(uuid:get_v4())),
 
     pgapp:equery(
         insert_pool,
-        "insert into logs (log_created, app_id," ++
+        "insert into logs (request_id, log_created, app_id," ++
         "object_id, tags, message, context) VALUES" ++
-        "($1, $2, $3, $4, $5, $6);",
-        [ParsedLogCreated, AppId, ObjectId,
+        "($1, $2, $3, $4, $5, $6, $7);",
+        [UUID, ParsedLogCreated, AppId, ObjectId,
          EncodedTags, Message, EncodedContext]
     ),
 
