@@ -22,7 +22,12 @@ start(_StartType, _StartArgs) ->
                                             {database, "reliable_logs"},
                                             {username, "readonly"}
                                             ]),
-    db_manager_sup:start_link().
+    case db_manager_sup:start_link() of
+        {ok, Pid} ->
+            db_event_logger:add_handler(),
+            {ok, Pid};
+        Other -> {error, Other}
+    end.
 
 %%--------------------------------------------------------------------
 stop(_State) ->

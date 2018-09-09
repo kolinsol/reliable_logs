@@ -1,4 +1,4 @@
--module(http_api_event_logger).
+-module(db_event_logger).
 
 -behaviour(gen_event).
 
@@ -10,10 +10,10 @@
 -record(state, {}).
 
 add_handler() ->
-        http_api_event:add_handler(?MODULE, []).
+        db_event:add_handler(?MODULE, []).
 
 delete_handler() ->
-        http_api_event:delete_handler(?MODULE, []).
+        db_event:delete_handler(?MODULE, []).
 
 init([]) ->
         {ok, #state{}}.
@@ -25,13 +25,15 @@ handle_call(_Req, State) ->
 handle_info(_Info, State) ->
         {ok, State}.
 
-handle_event({request_received, HandlerName, Method}, State) ->
-		error_logger:info_msg("Handler |~p| received |~p| request~n",
-							  [HandlerName, Method]), 
+handle_event({success, OpName}, State) ->
+		error_logger:info_msg("Operation |~p| succeeded~n", [OpName]),
+		{ok, State};
+handle_event({failure, OpName, Err}, State) ->
+		error_logger:info_msg("Operation |~p| failed with error:~n~p~n",
+                              [OpName, Err]),
 		{ok, State}.
 
 terminate(_Reason, _State) -> ok.
 
 code_change(_Old, State, _New) ->
         {ok, State}.
-

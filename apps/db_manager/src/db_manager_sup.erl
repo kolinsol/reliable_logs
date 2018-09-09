@@ -28,7 +28,9 @@ start_link() ->
 init([]) ->
     DBServer = {db_server, {db_server, start_link, []},
                 permanent, 2000, worker, [db_server]},
-    Children = [DBServer],
+    DBEvent = {db_event, {db_event, start_link, []},
+               permanent, 2000, worker, [db_event]},
+    Children = [DBServer, DBEvent],
     RestartStrategy = {one_for_one, 4, 3600},
     {ok, {RestartStrategy, Children}}.
 
